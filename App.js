@@ -1,17 +1,48 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { PickerItem } from './src/Picker';
+import api from './src/services/api';
+
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.areaMoeda}>
-        <Text style={styles.titulo}>Selecione sua moeda</Text>
-        <PickerItem />
+  const [moedas, setMoedas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadMoedas() {
+      const response = await api.get('all');
+      let arrayMoedas = [];
+      Object.keys(response.data).map((key) => {
+        arrayMoedas.push({
+          key: key,
+          label: key,
+          value: key
+        });
+      });
+
+      setMoedas(arrayMoedas);
+      setLoading(false);
+    }
+
+    loadMoedas();
+  }, []);
+
+  if(loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#101215', }}>
+        <ActivityIndicator color='#fff' size='large'/>
       </View>
-    </View>
-  );
+    )
+  }else {
+    return (
+      <View style={styles.container}>
+        <View style={styles.areaMoeda}>
+          <Text style={styles.titulo}>Selecione sua moeda</Text>
+          <PickerItem />
+        </View>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
