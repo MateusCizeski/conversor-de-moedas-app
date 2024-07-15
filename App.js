@@ -39,7 +39,7 @@ export default function App() {
     if(moedaBValor === 0 || moedaBValor === "" || moedaSelecionada === null) return;
     
 
-    const response = await api.get(`all/${moedaSelecionada}-BRL`)
+    const response = await api.get(`/all/${moedaSelecionada}-BRL`)
     console.log(response.data[moedaSelecionada].ask);
 
     let resultado = (response.data[moedaSelecionada].ask * parseFloat(moedaBValor) )
